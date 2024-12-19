@@ -40,7 +40,7 @@ public class BourseDataBaseHandler {
             preparedStatement.setInt(10, data.getNumberOfTransactions());
             preparedStatement.setDouble(11, data.getCapitalization());
 
-            // Execute the query
+            // Execute the query :
             int rowsInserted = preparedStatement.executeUpdate();
 
             if (rowsInserted > 0) {

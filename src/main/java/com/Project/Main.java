@@ -21,7 +21,6 @@ public class Main {
         dirthyData = Bs.BScraper();
         List<transformActions> cleanData = BourseTransformer.TransformData(dirthyData);
 
-
         // Print each row (String[]) in dirthyData
         for (transformActions row : cleanData) {
             BourseDataBaseHandler.InsertBourseData(row);
