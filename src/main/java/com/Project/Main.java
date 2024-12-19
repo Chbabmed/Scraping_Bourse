@@ -1,19 +1,12 @@
 package com.Project;
 
-import com.Project.Classes.transformActions;
-import com.Project.DB.BourseDataBaseHandler;
-import com.Project.Scrapers.BourseScraper;
-import com.Project.Transformers.BourseTransformer;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;  // Import Arrays class
+import com.Project.GUI.homePage;
 
 public class Main {
     public static void main(String[] args) {
 
         // ------------------------------> Bourse code :
-        //-> variables :
+/*        //-> variables :
         List<String[]> dirthyData;
         boolean inserted = false;
 
@@ -24,6 +17,10 @@ public class Main {
         // Print each row (String[]) in dirthyData
         for (transformActions row : cleanData) {
             BourseDataBaseHandler.InsertBourseData(row);
-        }
+        }*/
+        homePage home = new homePage();
+        home.display();
+
+
     }
 }
