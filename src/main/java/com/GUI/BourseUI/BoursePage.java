@@ -20,7 +20,6 @@ public class BoursePage extends JFrame {
 
     }
 
-    // Méthode pour afficher la page
     public void display() {
         this.setVisible(true);
     }

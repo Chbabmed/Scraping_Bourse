@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import com.GUI.BitcoinUI.BitcoinPage;
 import com.GUI.BourseUI.BoursePage;
+import com.GUI.BourseUI.firstPage;
 
 public class HomePage extends JFrame {
 
@@ -15,6 +16,7 @@ public class HomePage extends JFrame {
         this.setTitle("Home Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(500, 500);
+        this.setLocationRelativeTo(null);
         this.setLayout(new GridLayout(2, 1)); // Deux sections : Bourse et BTC
 
         // SECTION 1 : Bourse
@@ -40,8 +42,8 @@ public class HomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Naviguer vers la nouvelle page
-                BoursePage boursePage = new BoursePage();
-                boursePage.display();
+                firstPage firstPage = new firstPage();
+                firstPage.display();
             }
         });
 

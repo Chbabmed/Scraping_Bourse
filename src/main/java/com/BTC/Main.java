@@ -3,7 +3,7 @@ package com.BTC;
 import com.BTC.Classes.BitcoinData;
 import com.BTC.DB.DatabaseHandler;
 import com.BTC.DB.Load;
-import com.BTC.GUI.ShowChart;
+import com.BTC.GUI.ShowChart2;
 import com.BTC.Prediction.IssueReportPrediction;
 import com.BTC.Prediction.PredictPrice;
 import com.BTC.Prediction.TestPredictionPrice;
@@ -46,7 +46,7 @@ public class Main {
             
             // affichage de la charte (par exemple du 2024-09-01 à 2024-12-10 )
             
-            ShowChart chart = new ShowChart(db);
+            ShowChart2 chart = new ShowChart2(db);
             chart.displayChart("2024-09-01", "2024-12-10");
             
             // entrainement du modèle ARIMA (par exemple en utilisant les données du 2024-01-01 au 2024-10-31)

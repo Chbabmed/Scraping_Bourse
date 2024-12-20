@@ -13,10 +13,10 @@ import javax.swing.*;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ShowChart {
+public class ShowChart2 {
     private DatabaseHandler dbHandler;
 
-    public ShowChart(DatabaseHandler dbHandler) {
+    public ShowChart2(DatabaseHandler dbHandler) {
         this.dbHandler = dbHandler;
     }
 
