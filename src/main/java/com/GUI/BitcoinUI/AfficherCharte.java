@@ -37,10 +37,10 @@ public class AfficherCharte {
         panel2.setLayout(new BorderLayout());
 
 
-        ////
+        //**********************************************************************************************************//
         //                                            BOUTTON (Afficher la charte)                                  //
         //                                                                                                          //
-        ////
+        //**********************************************************************************************************//
 
         JButton afficherButton = new JButton("Afficher le Charte");
         afficherButton.setPreferredSize(new Dimension(300, 30));
@@ -54,7 +54,7 @@ public class AfficherCharte {
             String endDate = dateFin.getText().trim();
 
             if (startDate.isEmpty() || endDate.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Veuillez entrer des dates valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Veuillez entrer des dates valides (format yyyy-mm-dd).", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -72,11 +72,32 @@ public class AfficherCharte {
         panel1.add(dateFin);
         panel1.add(afficherButton);
 
+        //**********************************************************************************************************//
+        //                                          PANNEAU retour à la page d'accueil                              //
+        //                                                                                                          //
+        //**********************************************************************************************************//
+
+        JPanel panelAccueil = new JPanel();
+        FlowLayout layoutAccueil = new FlowLayout();
+        layoutAccueil.setHgap(10); // Espacement horizontal entre les composants
+        panelAccueil.setLayout(layoutAccueil);
+
+        JButton RetourButton = new JButton("Retouner à la page d'acceuil");
+        RetourButton.setPreferredSize(new Dimension(300, 30));
+        RetourButton.setFocusPainted(false); // Supprimer le focus
+        panelAccueil.add(RetourButton);
+        RetourButton.addActionListener(e -> {
+            // Fermer la fenêtre actuelle
+            frame.dispose();
+            // Créer une nouvelle instance de la classe voulue
+            new InterfaceGraph(); // à remplacer par la page d'accueil principale
+        });
 
 
 
         frame.add(panel1, BorderLayout.NORTH);
         frame.add(panel2, BorderLayout.CENTER);
+        frame.add(panelAccueil, BorderLayout.SOUTH);
         // Rendre la fenêtre visible
         frame.setLocationRelativeTo(null); // Centre de l'écran
         frame.setVisible(true);

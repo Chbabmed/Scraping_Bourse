@@ -18,4 +18,17 @@ public class DateFormatter {
             throw e; // Re-throw the exception for handling upstream
         }
     }
+
+    public static String convertDate(String date, String inputFormat) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(inputFormat);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, inputFormatter);
+            return parsedDate.format(outputFormatter);
+        } catch (DateTimeParseException e) {
+            System.err.println("Invalid date format: " + date + ". Expected format: " + inputFormat);
+            throw e; // Re-throw the exception for handling upstream
+        }
+    }
 }

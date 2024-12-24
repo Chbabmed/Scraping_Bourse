@@ -1,16 +1,29 @@
 package com.GUI.BourseUI;
 
+import com.BTC.Classes.BitcoinData;
+import com.BTC.DB.DatabaseHandler;
+import com.BTC.DB.Load;
+import com.BTC.Transformers.TransformData;
+import com.Project.Classes.transformActions;
 import com.GUI.BitcoinUI.AI;
+import com.Project.DB.BourseDataBaseHandler;
+import com.Project.Scrapers.BourseScraper;
+import com.Project.Transformers.BourseTransformer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.PrintStream;
+import java.util.List;
 
 public class firstPage extends JFrame {
 
-    public firstPage() {
+    private String InstrumentChoisi;
+
+    public firstPage(String InstrumentChoisi) {
         // --> Frame global configuration:
-        this.setTitle("La bourse de Casablanca");
+        this.setTitle(InstrumentChoisi);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
         this.setLocationRelativeTo(null);
         this.setSize(600, 600);
@@ -36,6 +49,54 @@ public class firstPage extends JFrame {
         btnPrediction.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnPrediction.setPreferredSize(new Dimension(400, 30));
         btnPrediction.setMaximumSize(new Dimension(400, 30)); // Force size
+
+
+        //----------------------------------------- BTN Actions :
+        btnUpdateDB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Affichage de la boîte de dialogue de confirmation
+                int response = JOptionPane.showConfirmDialog(firstPage.this,
+                        "Voulez-vous mettre à jour la base de données du Bitcoin ?",
+                        "Confirmation",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                // Vérifier la réponse
+                if (response == JOptionPane.YES_OPTION) {
+                    // Action à réaliser si l'utilisateur confirme
+                    // crap + transform + load
+
+                    try {
+
+                        //scraping des données
+
+                        BourseScraper Boursescraper = new BourseScraper();
+                        List<String[]> dirthyData;
+                        boolean inserted = false;
+
+                        System.out.println("frommm ");
+
+/*                        BourseScraper Bs = new BourseScraper();
+                        dirthyData = Bs.BScraper();
+                        List<transformActions> cleanData = BourseTransformer.TransformData(dirthyData);
+
+                        // Print each row (String[]) in dirthyData
+                        for (transformActions row : cleanData) {
+                            BourseDataBaseHandler.InsertBourseData(row);
+                        }*/
+
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                    }
+                } else {
+                    // Action si l'utilisateur annule
+                    JOptionPane.showMessageDialog(firstPage.this, "Opération annulée.");
+                }
+            };
+        });
+
+
 
         // --> Adding buttons to panel:
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add spacing

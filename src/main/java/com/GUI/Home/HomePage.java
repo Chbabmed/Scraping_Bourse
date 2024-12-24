@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.GUI.BitcoinUI.BitcoinPage;
+import com.GUI.BitcoinUI.InterfaceGraph;
 import com.GUI.BourseUI.BoursePage;
+import com.GUI.BourseUI.chooseInstru;
 import com.GUI.BourseUI.firstPage;
 
 public class HomePage extends JFrame {
@@ -42,8 +44,10 @@ public class HomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Naviguer vers la nouvelle page
-                firstPage firstPage = new firstPage();
-                firstPage.display();
+
+                chooseInstru ChoosePage = new chooseInstru();
+                ChoosePage.display();
+                //return null;
             }
         });
 
@@ -75,8 +79,8 @@ public class HomePage extends JFrame {
         btcButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BitcoinPage bitcoinPage = new BitcoinPage();
-                bitcoinPage.display();
+                new InterfaceGraph();
+                //return null;
             }
         });
 

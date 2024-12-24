@@ -40,7 +40,7 @@ public class BourseScraper {
             } catch (TimeoutException e) {
                 System.out.println("Cookie button not found in time. Proceeding without clicking.");
             }
-
+            //Thread.sleep(7000);
             // -> Instrument input field
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement instrumentInput = wait.until(ExpectedConditions.visibilityOfElementLocated(

@@ -2,17 +2,27 @@ package com.Project.DB;
 
 import com.Project.Classes.transformActions;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class BourseDataBaseHandler {
 
-    public static void InsertBourseData(transformActions data) {
+    /*************************************
+    * First Function :
+    * --> insertion of data into database :
+    *
+     * */
+
+    public static boolean InsertBourseData(transformActions data) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        boolean status = false;
+
+
 
         String insertQuery = "INSERT INTO BourseData (tradeDate, company_Name, ticker, openingPrice, closingPrice, " +
                 "hightPrice, lowPrice, NumberOfSecuritiestTraded, volume, NumberOfTransactions, capitalization) " +
@@ -41,14 +51,84 @@ public class BourseDataBaseHandler {
             preparedStatement.setDouble(11, data.getCapitalization());
 
             // Execute the query :
+
             int rowsInserted = preparedStatement.executeUpdate();
 
-            if (rowsInserted > 0) {
+            if (rowsInserted > 0 ) {
                 System.out.println("A new row was inserted successfully.");
+                status = true;
             }
 
         } catch (SQLException e) {
             System.err.println("Error while inserting data: " + e.getMessage());
+            status = false;
         }
+        return status;
     }
+
+    /*************************************
+     * Second Function :
+     * --> Getting data from database :
+     * */
+
+    public static List<transformActions> GetAllBourseData(String StartDate, String EndDate) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<transformActions> data = new ArrayList<transformActions>();
+
+        // converting data to appropriate format :
+        java.sql.Date sqldateStart = null;
+        java.sql.Date sqldateEnd = null;
+        sqldateStart = convertDateToSQL(StartDate, "yyyy-MM-dd");
+        sqldateEnd = convertDateToSQL(EndDate, "yyyy-MM-dd");
+
+
+        String query = "SELECT * FROM BourseData WHERE tradeDate BETWEEN ? AND ?";
+        try{
+            connection = DB_Connect.connect();
+            preparedStatement = connection.prepareStatement(query);
+            try {
+                preparedStatement.setDate(1, sqldateStart);
+                preparedStatement.setDate(2, sqldateEnd);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String tradeDate = rs.getString("tradeDate");
+                    String company_Name = rs.getString("company_Name");
+                    String ticker = rs.getString("ticker");
+                    double openingPrice = rs.getDouble("openingPrice");
+                    double closingPrice = rs.getDouble("closingPrice");
+                    double highPrice = rs.getDouble("hightPrice");
+                    double lowPrice = rs.getDouble("lowPrice");
+                    int NumberOfSecuritiestTraded = rs.getInt("NumberOfSecuritiestTraded");
+                    int Volume = rs.getInt("Volume");
+                    int NumberOfTransactions = rs.getInt("NumberOfTransactions");
+                    double Capitalization = rs.getDouble("Capitalization");
+                    data.add(new transformActions(tradeDate,company_Name,ticker,openingPrice,closingPrice,
+                            highPrice, lowPrice, Volume, NumberOfSecuritiestTraded, NumberOfTransactions, Capitalization ));
+                }
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            System.err.println("Error while retrieving data from database: " + e.getMessage());
+            return null;
+        }
+
+        return data;
+    }
+
+    // function to convert string to date format :
+    public static java.sql.Date convertDateToSQL(String date, String inputFormat) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(inputFormat);
+        LocalDate parsedDate = LocalDate.parse(date, inputFormatter);
+        return java.sql.Date.valueOf(parsedDate); // Converts LocalDate to java.sql.Date
+    }
+
+
+
 }

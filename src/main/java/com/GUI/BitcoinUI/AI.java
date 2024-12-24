@@ -1,5 +1,11 @@
 package com.GUI.BitcoinUI;
 
+import com.BTC.DB.DatabaseHandler;
+import com.BTC.Prediction.IssueReportPrediction;
+import com.BTC.Prediction.PredictPrice;
+import com.BTC.Prediction.TestPredictionPrice;
+import com.BTC.Prediction.Train_AI_Model;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.OutputStream;
@@ -18,8 +24,13 @@ public class AI {
         // Panneau principal (pour organiser les panneaux verticaux)
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Disposition verticale
+        mainPanel.setPreferredSize(new Dimension(frame.getWidth(), (int) (frame.getHeight() * 0.55)));
 
-        // panneau 1
+
+        //**********************************************************************************************************//
+        //                                      PANNEAU d'entrainement du modèle                                    //
+        //                                                                                                          //
+        //**********************************************************************************************************//
         JPanel panel1 = new JPanel();
         FlowLayout layout1 = new FlowLayout();
         layout1.setHgap(10); // Espacement horizontal entre les composants
@@ -28,22 +39,63 @@ public class AI {
         // Création des champs de texte pour les dates
         JLabel l11 = new JLabel("de");
         JLabel l12 = new JLabel("à");
-        JTextField dateDebut = new JTextField();
-        JTextField dateFin = new JTextField();
+        JTextField dateDebut1 = new JTextField();
+        JTextField dateFin1 = new JTextField();
         Dimension textFieldSize = new Dimension(80, 25); // Largeur 80px, hauteur 25px
-        dateDebut.setPreferredSize(textFieldSize);
-        dateFin.setPreferredSize(textFieldSize);
+        dateDebut1.setPreferredSize(textFieldSize);
+        dateFin1.setPreferredSize(textFieldSize);
 
         JButton entrainerButton = new JButton("Entrainer Modèle AI");
         entrainerButton.setPreferredSize(new Dimension(300, 30));
         entrainerButton.setFocusPainted(false); // Supprimer le focus
         panel1.add(entrainerButton);
-        panel1.add(l11);
-        panel1.add(dateDebut);
-        panel1.add(l12);
-        panel1.add(dateFin);
+        entrainerButton.addActionListener(e -> {
+            // Affichage de la boîte de dialogue de confirmation
+            int response = JOptionPane.showConfirmDialog(frame,
+                    "Voulez-vous entrainer un autre modèle et remplacer le modèle entrainé actuel",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
-        // panneau 2
+            // Vérifier la réponse
+            if (response == JOptionPane.YES_OPTION) {
+                // Action à réaliser si l'utilisateur confirme
+
+                try {
+
+                    String startDate1 = dateDebut1.getText().trim();
+                    String endDate1 = dateFin1.getText().trim();
+
+                    if (startDate1.isEmpty() || endDate1.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Veuillez entrer des dates valides (format yyyy-mm-dd).", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // entrainement du modèle ARIMA (par exemple en utilisant les données du 2024-01-01 au 2024-10-31)
+
+                    DatabaseHandler db = new DatabaseHandler();
+                    Train_AI_Model trainer = new Train_AI_Model(db);
+                    trainer.trainModel(startDate1, endDate1);
+
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            } else {
+                // Action si l'utilisateur annule
+                JOptionPane.showMessageDialog(frame, "Opération annulée.");
+            }
+        });
+        panel1.add(l11);
+        panel1.add(dateDebut1);
+        panel1.add(l12);
+        panel1.add(dateFin1);
+
+
+        //**********************************************************************************************************//
+        //                                          PANNEAU de test du modèle                                       //
+        //                                                                                                          //
+        //**********************************************************************************************************//
+
         JPanel panel2 = new JPanel();
         FlowLayout layout2 = new FlowLayout();
         layout2.setHgap(10); // Espacement horizontal entre les composants
@@ -62,12 +114,54 @@ public class AI {
         testerButton.setPreferredSize(new Dimension(300, 30));
         testerButton.setFocusPainted(false); // Supprimer le focus
         panel2.add(testerButton);
+
+        testerButton.addActionListener(e -> {
+            // Affichage de la boîte de dialogue de confirmation
+            int response = JOptionPane.showConfirmDialog(frame,
+                    "Voulez-vous tester le modèle actuel",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            // Vérifier la réponse
+            if (response == JOptionPane.YES_OPTION) {
+                // Action à réaliser si l'utilisateur confirme
+
+                try {
+
+                    String startDate2 = dateDebut2.getText().trim();
+                    String endDate2 = dateFin2.getText().trim();
+
+                    if (startDate2.isEmpty() || endDate2.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Veuillez entrer des dates valides (format yyyy-mm-dd).", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // test du modèle
+
+                    DatabaseHandler db = new DatabaseHandler();
+                    TestPredictionPrice test_predictor = new TestPredictionPrice(db);
+                    test_predictor.predictPriceForDateRange(startDate2,endDate2);
+
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            } else {
+                // Action si l'utilisateur annule
+                JOptionPane.showMessageDialog(frame, "Opération annulée.");
+            }
+        });
         panel2.add(l21);
         panel2.add(dateDebut2);
         panel2.add(l22);
         panel2.add(dateFin2);
 
-        // panneau 3
+
+        //**********************************************************************************************************//
+        //                                           PANNEAU de prédiction                                          //
+        //                                                                                                          //
+        //**********************************************************************************************************//
+
         JPanel panel3 = new JPanel();
         FlowLayout layout3 = new FlowLayout();
         layout3.setHgap(10); // Espacement horizontal entre les composants
@@ -84,11 +178,52 @@ public class AI {
         PredireButton.setPreferredSize(new Dimension(300, 30));
         PredireButton.setFocusPainted(false); // Supprimer le focus
         panel3.add(PredireButton);
+        PredireButton.addActionListener(e -> {
+            // Affichage de la boîte de dialogue de confirmation
+            int response = JOptionPane.showConfirmDialog(frame,
+                    "Voulez-vous effectuer une prédiction?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            // Vérifier la réponse
+            if (response == JOptionPane.YES_OPTION) {
+                // Action à réaliser si l'utilisateur confirme
+
+                try {
+
+                    String datePrediction = date.getText().trim();
+
+                    if (datePrediction.isEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Veuillez entrer une date valide (format yyyy-mm-dd).", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // prédiction et génération de rapport pdf
+
+                    DatabaseHandler db = new DatabaseHandler();
+                    // prédire le prix de cloture de la date donnée
+                    PredictPrice predictor = new PredictPrice(db);
+                    predictor.predictPrice(datePrediction);
+
+
+                    // générer un rapport de prédiction
+                    IssueReportPrediction report = new IssueReportPrediction(db);
+                    report.generateReport();
+
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            } else {
+                // Action si l'utilisateur annule
+                JOptionPane.showMessageDialog(frame, "Opération annulée.");
+            }
+        });
         panel3.add(l31);
         panel3.add(date);
 
 
-        //panneau des titre 
+        //panneau des titre
         JPanel panelTitre1 = new JPanel();
         JLabel titre1 = new JLabel("Entrainer le model AI en utilisant les données de la base");
         panelTitre1.add(titre1);
@@ -108,29 +243,57 @@ public class AI {
         mainPanel.add(panelTitre3);
         mainPanel.add(panel3);
 
-        ////
+        //**********************************************************************************************************//
         //                                            ZONE DE TEXTE                                                 //
         //                                                                                                          //
-        ////
-        // Création de la zone de texte
+        //**********************************************************************************************************//
+        // la zone de texte
         JTextArea ta = new JTextArea();
         ta.setEditable(false); // Empêche la modification par l'utilisateur
+        ta.setLineWrap(true);  // Retour automatique à la ligne
+        ta.setWrapStyleWord(true); // Retour à la ligne au mot
+
+        // Barre de défilement
         JScrollPane scrollPane = new JScrollPane(ta);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension((int) (frame.getWidth() * 0.9), (int) (frame.getHeight() * 0.2)));
 
-        // Définir la taille de la zone de texte
-        Dimension dm = new Dimension();
-        dm.setSize((int)(frame.getWidth() * 0.9), (int)(frame.getHeight() * 0.2));
-        ta.setPreferredSize(dm);
 
-        // Panneau pour la zone de texte
-        JPanel textPanel = new JPanel();
-        textPanel.add(scrollPane);
+        // panneau conteneur
+        JPanel panelConteneur = new JPanel();
+        panelConteneur.setPreferredSize(new Dimension(frame.getWidth(), (int) (frame.getHeight() * 0.30)));
+        panelConteneur.add(scrollPane, BorderLayout.CENTER);
 
-        // Ajouter la zone de texte au panneau principal
-        mainPanel.add(textPanel);
+        //**********************************************************************************************************//
+        //                                          PANNEAU retour à la page d'accueil                              //
+        //                                                                                                          //
+        //**********************************************************************************************************//
+
+        JPanel panelAccueil = new JPanel();
+        FlowLayout layoutAccueil = new FlowLayout();
+        layoutAccueil.setHgap(10); // Espacement horizontal entre les composants
+        panelAccueil.setLayout(layoutAccueil);
+        panelAccueil.setPreferredSize(new Dimension(frame.getWidth(), (int) (frame.getHeight() * 0.15)));
+
+        JButton RetourButton = new JButton("Retouner à la page d'acceuil");
+        RetourButton.setPreferredSize(new Dimension(300, 30));
+        RetourButton.setFocusPainted(false); // Supprimer le focus
+        panelAccueil.add(RetourButton);
+        RetourButton.addActionListener(e -> {
+            // Fermer la fenêtre actuelle
+            frame.dispose();
+            // Créer une nouvelle instance de la classe volue
+            new InterfaceGraph(); // à remplacer par la page d'accueil principale
+        });
+
+
 
         // Ajouter mainPanel à la fenêtre
-        frame.add(mainPanel, BorderLayout.CENTER);
+        frame.add(mainPanel, BorderLayout.NORTH);
+        frame.add(panelConteneur, BorderLayout.CENTER);
+        frame.add(panelAccueil, BorderLayout.SOUTH);
+
+
 
         // Rediriger System.out vers le JTextArea
         PrintStream printStream = new PrintStream(new CustomOutputStream(ta));
@@ -157,3 +320,4 @@ public class AI {
         }
     }
 }
+

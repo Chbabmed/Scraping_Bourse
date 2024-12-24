@@ -34,6 +34,7 @@ public class homePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new BoursePage(); // Ouvre la page Scrape Bourse
+                //return null;
             }
         });
 
@@ -41,6 +42,7 @@ public class homePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new BTCPage(); // Ouvre la page Scrape BTC
+                //return null;
             }
         });
 
