@@ -11,7 +11,6 @@ public class AfficherCharte {
 
         // fenêtre
         JFrame frame = new JFrame("Bitcoin");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
 

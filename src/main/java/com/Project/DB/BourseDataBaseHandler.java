@@ -60,7 +60,7 @@ public class BourseDataBaseHandler {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error while inserting data: " + e.getMessage());
+            //System.err.println("Error while inserting data: " + e.getMessage());
             status = false;
         }
         return status;

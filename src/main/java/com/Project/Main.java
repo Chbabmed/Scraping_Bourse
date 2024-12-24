@@ -18,11 +18,10 @@ public class Main {
         String date = null;
         List<String[]> dirthyData;
 
-
         LoadBourse.GetLastDate("AKDITAL");
 
         BourseScraper Bs = new BourseScraper();
-        dirthyData = Bs.BScraper();
+        dirthyData = Bs.BScraper("AKDITAL");
         List<transformActions> cleanData = BourseTransformer.TransformData(dirthyData);
 
         LoadBourse loader = new LoadBourse();

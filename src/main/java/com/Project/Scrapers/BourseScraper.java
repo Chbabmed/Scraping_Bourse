@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 public class BourseScraper {
 
 
-    public List<String[]> BScraper() {
+    public List<String[]> BScraper(String instrument) {
 
         System.setProperty("webdriver.edge.driver", "C:/Users/chbab/Desktop/msedgedriver.exe");
         WebDriver driver = new EdgeDriver();
@@ -47,7 +47,7 @@ public class BourseScraper {
                     By.id("headlessui-combobox-input-:R1mida66:")
             ));
             instrumentInput.click();
-            instrumentInput.sendKeys("AKDITAL");
+            instrumentInput.sendKeys(instrument);
 
             // Wait for the dropdown to appear
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@role='listbox']")));
@@ -55,7 +55,7 @@ public class BourseScraper {
             // Optionally, you can also select the value from the dropdown programmatically
             List<WebElement> options = driver.findElements(By.xpath("//ul[@role='listbox']/li"));
             for (WebElement option : options) {
-                if (option.getText().contains("AKDITAL")) {
+                if (option.getText().contains(instrument)) {
                     option.click();
                     break;
                 }

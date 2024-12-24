@@ -7,6 +7,7 @@ import com.BTC.Transformers.TransformData;
 import com.Project.Classes.transformActions;
 import com.GUI.BitcoinUI.AI;
 import com.Project.DB.BourseDataBaseHandler;
+import com.Project.DB.LoadBourse;
 import com.Project.Scrapers.BourseScraper;
 import com.Project.Transformers.BourseTransformer;
 
@@ -71,20 +72,19 @@ public class firstPage extends JFrame {
 
                         //scraping des données
 
-                        BourseScraper Boursescraper = new BourseScraper();
+                        String date = null;
                         List<String[]> dirthyData;
-                        boolean inserted = false;
 
-                        System.out.println("frommm ");
+                        LoadBourse.GetLastDate(InstrumentChoisi);
 
-/*                        BourseScraper Bs = new BourseScraper();
-                        dirthyData = Bs.BScraper();
+                        BourseScraper Bs = new BourseScraper();
+                        dirthyData = Bs.BScraper(InstrumentChoisi);
                         List<transformActions> cleanData = BourseTransformer.TransformData(dirthyData);
 
-                        // Print each row (String[]) in dirthyData
-                        for (transformActions row : cleanData) {
-                            BourseDataBaseHandler.InsertBourseData(row);
-                        }*/
+                        LoadBourse loader = new LoadBourse();
+                        loader.loadBourseData(cleanData);
+
+
 
                     } catch (Exception err) {
                         err.printStackTrace();
@@ -96,7 +96,13 @@ public class firstPage extends JFrame {
             };
         });
 
-
+        btnDisplayChart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BourseChart Bs = new BourseChart(InstrumentChoisi);
+                Bs.display();
+            }
+        });
 
         // --> Adding buttons to panel:
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add spacing

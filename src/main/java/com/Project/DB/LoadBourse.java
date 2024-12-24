@@ -67,6 +67,8 @@ public class LoadBourse {
             // Increment counter only if the data is successfully inserted
             if (BourseDataBaseHandler.InsertBourseData(record)) {
                 insertedCount++;  // Increment the counter only for successful insertions
+            }else{
+                System.out.print("");
             }
         }
 

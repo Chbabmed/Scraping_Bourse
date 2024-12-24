@@ -36,7 +36,7 @@ public class chooseInstru extends JFrame {
         akditalBTN.setMaximumSize(new Dimension(400, 30));
 
         // --> Button for displaying chart:
-        JButton cihBTN = new JButton("Scraper CIH");
+        JButton cihBTN = new JButton("AFMA");
         cihBTN.setAlignmentX(Component.CENTER_ALIGNMENT);
         cihBTN.setPreferredSize(new Dimension(400, 30));
         cihBTN.setMaximumSize(new Dimension(400, 30));
@@ -69,8 +69,8 @@ public class chooseInstru extends JFrame {
         cihBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setInstrumentChoisi("CIH");
-                firstPage cihPage = new firstPage("CIH");
+                setInstrumentChoisi("AFMA");
+                firstPage cihPage = new firstPage("AFMA");
                 cihPage.display();
             }
         });
@@ -93,6 +93,7 @@ public class chooseInstru extends JFrame {
 
 
     public void display() {
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 }
