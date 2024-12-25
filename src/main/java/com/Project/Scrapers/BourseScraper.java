@@ -106,7 +106,8 @@ public class BourseScraper {
             return tableData;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println(" ");
             return null;
         } finally {
             // Close the browser

@@ -13,7 +13,8 @@ import java.io.FileOutputStream;
 public class PredictionPDFGenerator {
 
     // Méthode pour générer le rapport de prédiction
-    public static void generateReport(double[][] predictions, String modelName, int JoursPrediction, String developerName) {
+    public static void generateReport(double[][] predictions, String modelName,
+                                      int JoursPrediction, String developerName, String Instru, double ecart) {
         Document document = new Document();
 
         try {
@@ -24,14 +25,18 @@ public class PredictionPDFGenerator {
             document.open();
 
             // Ajouter un titre
-            Paragraph title = new Paragraph("Rapport des Prédictions Boursières",
+            Paragraph title = new Paragraph("Rapport des Prédictions Boursières ",
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph(" "));
             // Ajouter le développeur et le modèle utilisé
+            document.add(new Paragraph("Instrument Choisi : " + Instru));
             document.add(new Paragraph("Développeur : " + developerName));
+            document.add(new Paragraph(" "));
             document.add(new Paragraph("Modèle AI utilisé : " + modelName));
+            document.add(new Paragraph("standard error : " + ecart));
 
             // Ajouter la date de prédiction
             document.add(new Paragraph("Jours pour faire prediction : " + JoursPrediction));
@@ -64,7 +69,7 @@ public class PredictionPDFGenerator {
             document.add(new Paragraph("\n"));
 
             // Ajouter une conclusion avec les informations finales
-            document.add(new Paragraph("Rapport généré avec succès pour les prédictions des prochains jours."));
+            document.add(new Paragraph("Rapport généré avec succès pour les prédictions des prochains "+JoursPrediction+" jours."));
 
             // Fermer le document
             document.close();

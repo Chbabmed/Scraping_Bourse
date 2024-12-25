@@ -71,7 +71,7 @@ public class BourseDataBaseHandler {
      * --> Getting data from database :
      * */
 
-    public static List<transformActions> GetAllBourseData(String StartDate, String EndDate) {
+    public static List<transformActions> GetAllBourseData(String StartDate, String EndDate, String instrument) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -84,13 +84,14 @@ public class BourseDataBaseHandler {
         sqldateEnd = convertDateToSQL(EndDate, "yyyy-MM-dd");
 
 
-        String query = "SELECT * FROM BourseData WHERE tradeDate BETWEEN ? AND ?";
+        String query = "SELECT * FROM BourseData WHERE company_Name = ? AND  tradeDate BETWEEN ? AND ? ORDER BY tradeDate DESC";
         try{
             connection = DB_Connect.connect();
             preparedStatement = connection.prepareStatement(query);
             try {
-                preparedStatement.setDate(1, sqldateStart);
-                preparedStatement.setDate(2, sqldateEnd);
+                preparedStatement.setString(1, instrument);
+                preparedStatement.setDate(2, sqldateStart);
+                preparedStatement.setDate(3, sqldateEnd);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -18,13 +18,14 @@ public class LoadBourse {
         LastDate = lastDate;
     }
 
+    // get the last date and set it into lastdate local variable
     public static void GetLastDate(String Inst) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         java.sql.Date tradeDate = null;
 
         // Correct SQL query syntax with the WHERE clause first, then ORDER BY and LIMIT
-        String query = "SELECT * FROM BourseData WHERE company_Name = ? ORDER BY tradeDate DESC LIMIT 1";
+        String query = "SELECT max(tradeDate) as tradeDate FROM BourseData WHERE company_Name = ?";
 
         try {
             // Get the database connection from DB_Connect class
@@ -48,7 +49,7 @@ public class LoadBourse {
 
         String date = String.valueOf(tradeDate);
         setLastDate(date);
-        System.out.println("Last date: " + LastDate);
+        //System.out.println("Last date: " + LastDate);
         //return tradeDate;
     }
 
@@ -64,11 +65,18 @@ public class LoadBourse {
         int insertedCount = 0;  // Counter for successful insertions
 
         for (transformActions record : data) {
-            // Increment counter only if the data is successfully inserted
+            System.out.println("--------------------------------------");
+
+            if(record.getTradeDate().equals(RecentInsertedDate) ) {
+                System.out.println("les donnees de ("+record.getCompany_Name() + ") exist deja a partir de "+record.getTradeDate());
+                return;
+            }
+
+
             if (BourseDataBaseHandler.InsertBourseData(record)) {
-                insertedCount++;  // Increment the counter only for successful insertions
+                insertedCount++;
             }else{
-                System.out.print("");
+                System.out.print("No row Inserted !");
             }
         }
 

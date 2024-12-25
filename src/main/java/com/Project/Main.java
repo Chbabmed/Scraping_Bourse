@@ -32,12 +32,13 @@ public class Main {
         loader.loadBourseData(cleanData);*/
 
         // Étape 1 : Charger les données
-        String startDate = "2024-01-01";
-        String endDate = "2024-12-01";
-        String Instrument = null;
+
+        String startDate = "2024-11-26";
+        String endDate = "2024-12-18";
+        String Instrument = "Akdital";
 
         //je doit ajouter instrument :
-        double[] closingPrices = dataHandler.fetchClosingPrices(startDate, endDate);
+        double[] closingPrices = dataHandler.fetchClosingPrices(startDate, endDate, Instrument);
 
         // Diviser les données en data for entraînement et de test => " 60% For training | 40% for Model Testing "
         int splitIndex = (int) (closingPrices.length * 0.6);
@@ -52,8 +53,11 @@ public class Main {
         ARIMAModel arima = new ARIMAModel(trainData);
         arima.trainModel(testData);
 
+        // --> get  standard error :
+        double ecart =  arima.getEcartdError();
+
         // Étape 3 : Faire une prédiction avec marge d'erreur
-        int futureSteps = 7;
+        int futureSteps = 1;
         double[][] futurePredictions = arima.predictWithMargin(futureSteps);
 
         // Étape 4 : Afficher les prédictions avec marges d'erreur
@@ -64,7 +68,7 @@ public class Main {
         }
 
         // Générer le rapport PDF avec les prédictions
-        PredictionPDFGenerator.generateReport(futurePredictions, "ARIMA", futureSteps, "Mohamed");
+        PredictionPDFGenerator.generateReport(futurePredictions, "ARIMA", futureSteps, "Mohamed", Instrument, ecart);
 
     }
 }

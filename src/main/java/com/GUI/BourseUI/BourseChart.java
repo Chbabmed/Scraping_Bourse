@@ -15,17 +15,18 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class BourseChart extends JFrame {
 
     private JTextField startDateField;
     private JTextField endDateField;
     private JButton displayButton;
-
+    private String instruChoisi ;
     public BourseChart(String instrument) {
         this.setTitle(instrument + " Chart");
         this.setSize(800, 600);  // Set the size of the frame
-
+        this.instruChoisi = instrument;
         // Set up the panel for date inputs and button (top panel)
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
@@ -73,10 +74,10 @@ public class BourseChart extends JFrame {
         BourseDataBaseHandler db = new BourseDataBaseHandler();
 
         // Fetch the data for the given date range
-        List<transformActions> data = db.GetAllBourseData(startDate, endDate);
+        List<transformActions> data = db.GetAllBourseData(startDate, endDate, this.instruChoisi);
 
         // Use a Map to avoid duplicate dates
-        Map<String, Double> aggregatedData = new HashMap<>();
+        Map<String, Double> aggregatedData = new TreeMap<>();
 
         for (transformActions action : data) {
             String tradeDate = action.getTradeDate();

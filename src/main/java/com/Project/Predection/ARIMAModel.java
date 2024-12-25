@@ -4,6 +4,10 @@ public class ARIMAModel {
     private double[] trainingData;
     private double ecartdError;
 
+    public double getEcartdError() {
+        return ecartdError;
+    }
+
     public ARIMAModel(double[] trainingData) {
         this.trainingData = trainingData;
     }

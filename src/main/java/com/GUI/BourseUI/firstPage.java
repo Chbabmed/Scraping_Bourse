@@ -87,7 +87,7 @@ public class firstPage extends JFrame {
 
 
                     } catch (Exception err) {
-                        err.printStackTrace();
+                        System.out.println(" ");
                     }
                 } else {
                     // Action si l'utilisateur annule
@@ -130,8 +130,8 @@ public class firstPage extends JFrame {
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         // Définir la taille de la zone de text :
-        Dimension dm = new Dimension();
-        dm.setSize((int)(this.getWidth() *0.9), (int) (this.getHeight() * 0.2));
+        Dimension dm = new Dimension(500, 350);
+        //dm.setSize((int)(this.getWidth() *0.9), (int) (this.getHeight() * 0.2));
         textArea.setPreferredSize(dm);
 
         JPanel PanelTextArea = new JPanel();
