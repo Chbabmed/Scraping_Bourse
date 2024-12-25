@@ -26,7 +26,7 @@ public class BourseChart extends JFrame {
 
     public BourseChart(String instrument) {
         this.setTitle(instrument + " Chart");
-        this.setSize(800, 600);
+        this.setSize(900, 600);
         this.setLocationRelativeTo(null);
 
         this.instruChoisi = instrument;
@@ -49,7 +49,7 @@ public class BourseChart extends JFrame {
 
         // Button to display the chart
         displayButton = new JButton("Afficher la Chart");
-        BtnPanel.add(displayButton);
+        topPanel.add(displayButton);
 
         // Add top panel to the frame
         this.add(topPanel, BorderLayout.NORTH);
