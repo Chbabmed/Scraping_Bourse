@@ -104,6 +104,15 @@ public class firstPage extends JFrame {
             }
         });
 
+        // button de prediction :
+        btnPrediction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                predictionUI p = new predictionUI();
+                p.display();
+            }
+        });
+
         // --> Adding buttons to panel:
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add spacing
         panel.add(btnUpdateDB);

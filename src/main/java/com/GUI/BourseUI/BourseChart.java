@@ -12,7 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BourseChart extends JFrame {
 
@@ -73,24 +75,28 @@ public class BourseChart extends JFrame {
         // Fetch the data for the given date range
         List<transformActions> data = db.GetAllBourseData(startDate, endDate);
 
-        // Check if data is retrieved
-        if (data != null) {
-            // Iterate over the data to populate the chart
-            for (transformActions action : data) {
-                // Get the trade date and high price for each action
-                String tradeDate = action.getTradeDate();  // Assuming tradeDate is in "yyyy-MM-dd" format
-                double highPrice = action.getHightPrice(); // Get the high price of the day
+        // Use a Map to avoid duplicate dates
+        Map<String, Double> aggregatedData = new HashMap<>();
 
-                // Add the data to the dataset
-                dataset.addValue(highPrice, "Price", tradeDate);
-            }
+        for (transformActions action : data) {
+            String tradeDate = action.getTradeDate();
+            double closingPrice = action.getClosingPrice();
+
+            // Pour enregister just le plus haut price de jour iterated :
+            aggregatedData.put(tradeDate, Math.max(aggregatedData.getOrDefault(tradeDate, 0.0), closingPrice));
         }
+
+        // Ajouter aggregated data to the dataset pour l'afficher dans la chart :
+        for (Map.Entry<String, Double> entry : aggregatedData.entrySet()) {
+            dataset.addValue(entry.getValue(), "ClosingPrice", entry.getKey());
+        }
+
 
         // Create the chart with the dataset
         JFreeChart chart = ChartFactory.createLineChart(
                 "Bourse Chart",              // Chart title
                 "Date",                      // X-axis label
-                "Price",                     // Y-axis label
+                "Closing Price",                     // Y-axis label
                 dataset,                     // Dataset
                 PlotOrientation.VERTICAL,    // Plot orientation
                 true,                        // Include legend
