@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 public class chooseInstru extends JFrame {
 
+    private String InstrumentChoisi;
     //--> getter :
     public String getInstrumentChoisi() {
         return InstrumentChoisi;
@@ -17,7 +18,7 @@ public class chooseInstru extends JFrame {
         InstrumentChoisi = instrumentChoisi;
     }
 
-    private String InstrumentChoisi;
+
 
     public chooseInstru() {
 
@@ -55,6 +56,14 @@ public class chooseInstru extends JFrame {
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
         panel.add(bcpBTN);
 
+        Box boxContainer = new Box(BoxLayout.Y_AXIS);
+        boxContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        boxContainer.add(Box.createVerticalGlue());
+        boxContainer.add(panel);
+        boxContainer.add(Box.createVerticalGlue());
+
+
         // --> les Actions des buttons :
         // AKDITAL :
         akditalBTN.addActionListener(new ActionListener() {
@@ -86,7 +95,7 @@ public class chooseInstru extends JFrame {
 
 
         // --> Adding panel to frame:
-        this.add(panel);
+        this.add(boxContainer);
 
 
     }

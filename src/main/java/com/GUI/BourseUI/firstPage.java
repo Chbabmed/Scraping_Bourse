@@ -108,7 +108,7 @@ public class firstPage extends JFrame {
         btnPrediction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                predictionUI p = new predictionUI();
+                predictionUI p = new predictionUI(InstrumentChoisi);
                 p.display();
             }
         });

@@ -130,6 +130,129 @@ public class BourseDataBaseHandler {
         return java.sql.Date.valueOf(parsedDate); // Converts LocalDate to java.sql.Date
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // les methodes ajouter par nour el yakine
+
+
+    // méthode pour enregistrer les tests de prédiction
+    public void savePredictionToDatabase(String date, String instrument, double predictedValue, double actualValue, String predictionErrorPercentage) {
+        String insertSQL = "INSERT INTO test_predictions_Bourse (date, instrument, predicted_value, actual_value, prediction_error_percentage) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = DB_Connect.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+
+            preparedStatement.setString(1, date);
+            preparedStatement.setString(2, instrument);
+            preparedStatement.setDouble(3, predictedValue);
+            preparedStatement.setDouble(4, actualValue);
+            preparedStatement.setString(5, predictionErrorPercentage);
+
+            preparedStatement.executeUpdate();
+            System.out.println("Prediction de test pour l'instrument : " + instrument + " enregistrée dans la base de données pour la date: " + date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors de l'enregistrement de la prédiction dans la base de données.");
+        }
+    }
+
+
+    // méthode pour enregistrer les prédictions dans la table production_predictions_bourse
+
+    public void savePrediction(String date, String instrument, double predictedValue) {
+        String insertSQL = "INSERT INTO production_predictions_Bourse (date, instrument, predicted_value) " +
+                "VALUES (?, ?, ?)";
+
+        try (Connection connection = DB_Connect.connect();
+             PreparedStatement pstmt = connection.prepareStatement(insertSQL)) {
+
+            pstmt.setString(1, date);
+            pstmt.setString(2, instrument);
+            pstmt.setDouble(3, predictedValue);
+            pstmt.executeUpdate();
+            System.out.println("Prediction pour l'instrument : " + instrument + " enregistrée dans la base de donnée pour la date " + date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Méthode pour récupérer la date de la dernière prédiction
+    public String getPredictionDate(String instrument) {
+        String query = "SELECT date FROM production_predictions_Bourse WHERE instrument = ? ORDER BY date DESC LIMIT 1";
+        try (Connection conn = DB_Connect.connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            // donner la valeur à instrument dana la requete
+            pstmt.setString(1, instrument);
+
+            // execution de la requete
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("date");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
+
+
+    // Méthode pour récupérer la valeur de la dernière prédiction
+    public double getPredictedPrice(String instrument) {
+        String query = "SELECT predicted_value FROM production_predictions_Bourse WHERE instrument = ? ORDER BY date DESC LIMIT 1";
+        try (Connection conn = DB_Connect.connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            // donner la valeur à instrument dana la requete
+            pstmt.setString(1, instrument);
+
+            // execution de la requete
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("predicted_value");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    // Méthode pour récupérer la plus grande erreur de prédiction
+    public String getPredictionError(String instrument) {
+        String query = "SELECT MAX(prediction_error_percentage) AS max_error FROM test_predictions_Bourse WHERE instrument = ?";
+        try (Connection conn = DB_Connect.connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            // donner la valeur à instrument dana la requete
+            pstmt.setString(1, instrument);
+
+            // execution de la requete
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("max_error");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
+
+    //  methode pour initialiser la table de test
+
+    public static void truncateTestPredictionsTable() {
+        String truncateSQL = "TRUNCATE TABLE test_predictions_Bourse";
+        try (Connection connection = DB_Connect.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(truncateSQL)) {
+
+            preparedStatement.executeUpdate();
+            System.out.println("La table test_predictions_Bourse a été vidée avec succès.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors de la suppression des données dans la table test_predictions_Bourse.");
+        }
+    }
 
 
 }

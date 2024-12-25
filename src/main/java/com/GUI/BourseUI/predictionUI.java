@@ -1,13 +1,19 @@
 package com.GUI.BourseUI;
 
+import com.GUI.BitcoinUI.AI;
+import com.Project.PredictionFinal.IssueReportPrediction_Bourse;
+import com.Project.PredictionFinal.PredictPrice_Bourse;
+import com.Project.PredictionFinal.TestPredictionPrice_Bourse;
+import com.Project.PredictionFinal.Train_AI_Model_Bourse;
+import com.Project.Transformers.DateValidator;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.PrintStream;
 
 public class predictionUI extends JFrame {
 
-    public predictionUI() {
+    public predictionUI(String InstrumentChoisi) {
         // Définir le titre de la fenêtre
         this.setTitle("Module AI");
         this.setSize(600, 600);
@@ -36,9 +42,11 @@ public class predictionUI extends JFrame {
         mainPanel.add(trainPanel);
 
 
+        //**********************************************************************************************************//
+        //                                          Training Buttons actions :                                      //
+        //**********************************************************************************************************//
 
 
-        //-----------------------------> Btn action :
         trainButton.addActionListener(e -> {
             // Affichage de la boîte de dialogue de confirmation
             int response = JOptionPane.showConfirmDialog(this,
@@ -51,9 +59,17 @@ public class predictionUI extends JFrame {
                 String fromDate = trainFromField.getText().trim();
                 String toDate = trainToField.getText().trim();
 
+                DateValidator dateValidator = new DateValidator();
+
+
                 if (fromDate.isEmpty() || toDate.isEmpty()) {
                     JOptionPane.showMessageDialog(this,
                             "Veuillez entrer des dates valides (format yyyy-mm-dd).",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if ( !dateValidator.isValidDate(fromDate) || !dateValidator.isValidDate(toDate)) {
+                    JOptionPane.showMessageDialog(this,
+                            "le format des dates est invalide ! (yyyy-mm-dd)",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -61,19 +77,16 @@ public class predictionUI extends JFrame {
                             "Entraînement du modèle AI en cours...\nDates: de " + fromDate + " à " + toDate,
                             "Succès",
                             JOptionPane.INFORMATION_MESSAGE);
+
+                    System.out.println(fromDate);
+                    System.out.println(toDate);
+
+                    Train_AI_Model_Bourse trainer = new Train_AI_Model_Bourse();
+                    //trainer.trainModel2("2024-11-16", "2024-12-01", "AKDITAL");
+                    trainer.trainModel2(fromDate, toDate, InstrumentChoisi);
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -96,11 +109,55 @@ public class predictionUI extends JFrame {
         testPanel.add(testSubPanel);
         mainPanel.add(testPanel);
 
+        //**********************************************************************************************************//
+        //                                          Tester Buttons actions :                                        //
+        //**********************************************************************************************************//
+
+        testButton.addActionListener(e -> {
+            // Affichage de la boîte de dialogue de confirmation
+            int response = JOptionPane.showConfirmDialog(this,
+                    "Voulez-vous tester le modèle actuel ? ",
+                    "Confirmation Entraînement",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (response == JOptionPane.YES_OPTION) {
+                // Logique d'entraînement
+                String fromDate = testFromField.getText().trim();
+                String toDate = testToField.getText().trim();
+
+                DateValidator dateValidator = new DateValidator();
+
+
+                if (fromDate.isEmpty() || toDate.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez entrer des dates valides (format yyyy-mm-dd).",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if ( !dateValidator.isValidDate(fromDate) || !dateValidator.isValidDate(toDate)) {
+                    JOptionPane.showMessageDialog(this,
+                            "le format des dates est invalide ! (yyyy-mm-dd)",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Entraînement du modèle AI en cours...\nDates: de " + fromDate + " à " + toDate,
+                            "Succès",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    TestPredictionPrice_Bourse test_predictor = new TestPredictionPrice_Bourse();
+                    test_predictor.predictPriceForDateRange(InstrumentChoisi, fromDate,toDate);
+                }
+            }
+        });
+
+
+
+
         // Section 3 : Prédire le prix
         JPanel predictPanel = new JPanel(new GridLayout(2, 1));
         JLabel predictLabel = new JLabel("Prédire le prix futur de clôture");
         JPanel predictSubPanel = new JPanel(new FlowLayout());
-        JButton predictButton = new JButton("Prédire le prix et générer rapport de prédiction...");
+        JButton predictButton = new JButton("Prédire le prix et générer rapport de prédiction");
         JTextField predictDateField = new JTextField(5);
         predictSubPanel.add(predictButton);
         predictSubPanel.add(new JLabel("du"));
@@ -108,6 +165,48 @@ public class predictionUI extends JFrame {
         predictPanel.add(predictLabel);
         predictPanel.add(predictSubPanel);
         mainPanel.add(predictPanel);
+
+        predictButton.addActionListener(e -> {
+            // Affichage de la boîte de dialogue de confirmation
+            int response = JOptionPane.showConfirmDialog(this,
+                    "Voulez-vous tester le modèle actuel ? ",
+                    "Confirmation Entraînement",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (response == JOptionPane.YES_OPTION) {
+                // Logique d'entraînement
+                String PredictionDate = predictDateField.getText().trim();
+
+                DateValidator dateValidator = new DateValidator();
+
+
+                if (PredictionDate.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez entrer une date valide (format yyyy-mm-dd).",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if ( !dateValidator.isValidDate(PredictionDate)) {
+                    JOptionPane.showMessageDialog(this,
+                            "le format de date est invalide ! (yyyy-mm-dd)",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Prediction et generation de PDF encours ... \nDates: de " + PredictionDate,
+                            "Succès",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    // prédire le prix de clotured
+                    PredictPrice_Bourse predictor = new PredictPrice_Bourse();
+                    predictor.predictPrice(InstrumentChoisi, PredictionDate);
+
+                    // générer un rapport de prédiction
+                    IssueReportPrediction_Bourse report = new IssueReportPrediction_Bourse();
+                    report.generateReport(InstrumentChoisi);
+                }
+            }
+        });
+
 
         // Section 4 : Zone de texte pour les résultats
         JPanel resultPanel = new JPanel(new BorderLayout());
@@ -117,27 +216,13 @@ public class predictionUI extends JFrame {
         resultPanel.add(resultScrollPane, BorderLayout.CENTER);
         mainPanel.add(resultPanel);
 
-        // Bouton de retour
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-        JButton backButton = new JButton("Retourner à la page d'accueil");
 
 
-        // hta n9adha mzzn :
-        //bottomPanel.add(backButton);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                this.dispose();
-                chooseInstru chooseInstru = new chooseInstru();
-                chooseInstru.display();
-            }
-
-            private void dispose() {
-                this.dispose();
-            }
-        });
+        // redirection of System.out To textArea :
+        PrintStream ps = new PrintStream(new AI.CustomOutputStream(resultArea));
+        System.setOut(ps);
+        System.setErr(ps);
+        this.setLocationRelativeTo(null);// center the frame
 
     }
 

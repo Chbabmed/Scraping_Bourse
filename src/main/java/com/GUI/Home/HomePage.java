@@ -17,7 +17,7 @@ public class HomePage extends JFrame {
         // Configurer la fenêtre principale
         this.setTitle("Home Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 500);
+        this.setSize(600, 600);
         this.setLocationRelativeTo(null);
         this.setLayout(new GridLayout(2, 1)); // Deux sections : Bourse et BTC
 
@@ -35,7 +35,7 @@ public class HomePage extends JFrame {
         JLabel bourseLogo = new JLabel(resizedBourseIcon, SwingConstants.CENTER);
         bourseLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton bourseButton = new JButton("Scrape Bourse");
+        JButton bourseButton = new JButton("Bourse Casablanca");
         bourseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         bourseButton.setForeground(new Color(128, 0, 0)); // Couleur maroon
 
@@ -71,7 +71,7 @@ public class HomePage extends JFrame {
         JLabel btcLogo = new JLabel(resizedBTCIcon, SwingConstants.CENTER);
         btcLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton btcButton = new JButton("Scrape Yahoo Finance");
+        JButton btcButton = new JButton("BITCOIN - Yahoo Finance");
         btcButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         btcButton.setForeground(new Color(128, 0, 0)); // Couleur maroon
 

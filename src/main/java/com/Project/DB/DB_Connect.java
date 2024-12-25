@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DB_Connect {
 
-    private static String url = "jdbc:mysql://localhost:3306/bourse_scraping";
+    private static String url = "jdbc:mysql://localhost:3306/nour";
     private static String username = "root";
     private static String password = "";
 

@@ -1,37 +1,35 @@
-package com.BTC.Prediction;
+package com.Project.PredictionFinal;
 
-import com.BTC.DB.DatabaseHandler;
+import com.Project.DB.BourseDataBaseHandler;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.awt.Desktop;
+import java.io.File;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+public class IssueReportPrediction_Bourse {
 
-public class IssueReportPrediction {
-    
-    private DatabaseHandler db;
 
-    public IssueReportPrediction(DatabaseHandler db) {
-        this.db = db;
-    }
+    public void generateReport(String instrument) {
+        BourseDataBaseHandler db = new BourseDataBaseHandler();
 
-    public void generateReport() throws IOException {
         // Récupérer les informations de la base de données
-        String datePrediction = db.getPredictionDate();
-        double predictedPrice = db.getPredictedPrice();
-        String predictionError = db.getPredictionError();
+        String datePrediction = db.getPredictionDate(instrument);
+        double predictedPrice = db.getPredictedPrice(instrument);
+        String predictionError = db.getPredictionError(instrument);
 
         // Création du document PDF
         Document document = new Document();
         try {
-            // Création du fichier PDF
-            PdfWriter.getInstance(document, new FileOutputStream("PredictionReport.pdf"));
+            // nom de l'instrument correct
+            String safeInstrument = instrument.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+            String fileName = "PredictionReport_Bourse_" + safeInstrument + ".pdf";
 
-            // Ouvrir le document pour écrire
+            // Création du fichier PDF
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
+
+            // Ouvrir le document
             document.open();
 
             // Ajouter un titre
@@ -46,6 +44,9 @@ public class IssueReportPrediction {
             // Ajouter le modèle AI
             document.add(new Paragraph("Modèle AI : ARIMA"));
 
+            // Ajouter l'instrument
+            document.add(new Paragraph("Instrument : " + instrument));
+
             // Ajouter la date de prédiction
             document.add(new Paragraph("Date de prédiction : " + datePrediction));
 
@@ -57,19 +58,18 @@ public class IssueReportPrediction {
 
             // Fermer le document
             document.close();
-            System.out.println("Le rapport PDF a été généré avec succès.");
+            System.out.println("Le rapport PDF a été généré avec succès : " + fileName);
+            // Ouvrir automatiquement le fichier PDF
+            File pdfFile = new File(fileName);
+            if (Desktop.isDesktopSupported() && pdfFile.exists()) {
+                Desktop.getDesktop().open(pdfFile);
+            } else {
+                System.out.println("Le fichier PDF ne peut pas être ouvert automatiquement.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        File pdfFile = new File("PredictionReport.pdf");
-        if (Desktop.isDesktopSupported() && pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-        } else {
-            System.out.println("Le fichier PDF ne peut pas être ouvert automatiquement.");
-
-        }
-
     }
 
 }
+

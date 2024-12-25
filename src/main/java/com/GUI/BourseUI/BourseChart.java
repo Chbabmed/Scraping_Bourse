@@ -23,13 +23,17 @@ public class BourseChart extends JFrame {
     private JTextField endDateField;
     private JButton displayButton;
     private String instruChoisi ;
+
     public BourseChart(String instrument) {
         this.setTitle(instrument + " Chart");
-        this.setSize(800, 600);  // Set the size of the frame
+        this.setSize(800, 600);
+        this.setLocationRelativeTo(null);
+
         this.instruChoisi = instrument;
         // Set up the panel for date inputs and button (top panel)
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
+        JPanel BtnPanel = new JPanel();
+        BtnPanel.setLayout(new FlowLayout());
 
         // Start Date Input
         JLabel startDateLabel = new JLabel("Start Date (yyyy-MM-dd): ");
@@ -45,7 +49,7 @@ public class BourseChart extends JFrame {
 
         // Button to display the chart
         displayButton = new JButton("Afficher la Chart");
-        topPanel.add(displayButton);
+        BtnPanel.add(displayButton);
 
         // Add top panel to the frame
         this.add(topPanel, BorderLayout.NORTH);
@@ -100,9 +104,9 @@ public class BourseChart extends JFrame {
                 "Closing Price",                     // Y-axis label
                 dataset,                     // Dataset
                 PlotOrientation.VERTICAL,    // Plot orientation
-                true,                        // Include legend
-                true,                        // Tooltips
-                false                        // URLs
+                true,
+                true,
+                false
         );
 
         return chart;
@@ -112,9 +116,9 @@ public class BourseChart extends JFrame {
     // Method to display the chart
     private void displayChart(JFreeChart chart) {
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(780, 400)); // Set the chart panel size
-        this.add(chartPanel, BorderLayout.CENTER);  // Add chart panel to the frame
-        this.revalidate();  // Refresh the frame
+        chartPanel.setPreferredSize(new Dimension(780, 400));
+        this.add(chartPanel, BorderLayout.CENTER);
+        this.revalidate();
     }
 
     public void display() {

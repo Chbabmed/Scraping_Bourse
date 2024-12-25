@@ -17,8 +17,7 @@ public class AI {
 
         // fenêtre
         JFrame frame = new JFrame("Module AI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);  // Augmenté pour accommoder la zone de texte
+        frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
 
         // Panneau principal (pour organiser les panneaux verticaux)
@@ -118,7 +117,7 @@ public class AI {
         testerButton.addActionListener(e -> {
             // Affichage de la boîte de dialogue de confirmation
             int response = JOptionPane.showConfirmDialog(frame,
-                    "Voulez-vous tester le modèle actuel",
+                    "Voulez-vous tester le modèle actuel    ?",
                     "Confirmation",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
@@ -283,7 +282,7 @@ public class AI {
             // Fermer la fenêtre actuelle
             frame.dispose();
             // Créer une nouvelle instance de la classe volue
-            new InterfaceGraph(); // à remplacer par la page d'accueil principale
+            // à remplacer par la page d'accueil principale
         });
 
 
